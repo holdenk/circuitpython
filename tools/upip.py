@@ -115,8 +115,7 @@ def expandhome(s):
     return s
 
 
-import ussl
-import usocket
+import socket
 
 warn_ussl = True
 
