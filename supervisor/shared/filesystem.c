@@ -74,7 +74,8 @@ static void make_sample_code_file(FATFS *fatfs) {
     #if CIRCUITPY_FULL_BUILD
     FIL fs;
     UINT char_written = 0;
-    const byte buffer[] = "print(\"Hello World!\")\n";
+    // Update the boot code here.
+    const byte buffer[] = "try:\n  import main\nexcept Exception as e:\n  print(e)\n  import os\n  os.unlink('code.py')";
     // Create or modify existing code.py file
     f_open(fatfs, &fs, "/code.py", FA_WRITE | FA_CREATE_ALWAYS);
     f_write(&fs, buffer, sizeof(buffer) - 1, &char_written);
@@ -143,6 +144,9 @@ bool filesystem_init(bool create_allowed, bool force_create) {
     } else if (res != FR_OK) {
         return false;
     }
+
+    // make a sample code.py file
+    make_sample_code_file(&vfs_fat->fatfs);
 
     vfs->str = "/";
     vfs->len = 1;
